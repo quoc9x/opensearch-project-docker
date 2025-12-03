@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   opensearch:
-    image: opensearchproject/opensearch:latest
+    image: opensearchproject/opensearch:3
     container_name: opensearch
     environment:
       - cluster.name=opensearch-cluster
@@ -23,8 +21,8 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-    volumes:
-      - opensearch-data:/usr/share/opensearch/data
+    # volumes:
+    #   - opensearch-data:/usr/share/opensearch/data
     ports:
       - "9200:9200"
       - "9600:9600"
@@ -32,13 +30,13 @@ services:
       - opensearch-net
 
   opensearch-dashboards:
-    image: opensearchproject/opensearch-dashboards:latest
+    image: opensearchproject/opensearch-dashboards:3
     container_name: opensearch-dashboards
     ports:
       - "5601:5601"
     environment:
       - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=false"
-      - "OPENSEARCH_HOSTS=http://opensearch:9200"
+      - "OPENSEARCH_HOSTS=https://opensearch:9200"
       - "OPENSEARCH_USERNAME=kibanaserver"
       - "OPENSEARCH_PASSWORD=kibanaserver"
       - "SERVER_NAME=opensearch-dashboards"
@@ -48,8 +46,27 @@ services:
     networks:
       - opensearch-net
 
-volumes:
-  opensearch-data:
+  data-prepper:
+    container_name: data-prepper
+    image: opensearchproject/data-prepper:2.8.0
+    volumes:
+      - ./log_pipeline.yaml:/usr/share/data-prepper/pipelines/log_pipeline.yaml
+    ports:
+      - 2021:2021
+    networks:
+      - opensearch-net
+
+  fluent-bit:
+    container_name: fluent-bit
+    image: fluent/fluent-bit:3.0
+    volumes:
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./data-ingestion/nginx/access.log:/var/log/access.log
+    networks:
+      - opensearch-net
+
+# volumes:
+#   opensearch-data:
 
 networks:
   opensearch-net:

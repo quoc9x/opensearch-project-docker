@@ -1,0 +1,20 @@
+log-pipeline:
+  source:
+    http:
+      ssl: false
+  processor:
+    - grok:
+        match:
+          log: [ "%{COMMONAPACHELOG}" ]
+    # - date:
+    #     match:
+    #       - key: "timestamp"
+    #         patterns: [ "dd/MMM/yyyy:HH:mm:ss Z" ]
+  sink:
+    - opensearch:
+        hosts: [ "https://opensearch:9200" ]
+        insecure: true
+        username: admin
+        password: MyStrongPassword123!
+        index: "nginx_logs"
+        
