@@ -6,10 +6,10 @@ log-pipeline:
     - grok:
         match:
           log: [ "%{COMMONAPACHELOG}" ]
-    # - date:
-    #     match:
-    #       - key: "timestamp"
-    #         patterns: [ "dd/MMM/yyyy:HH:mm:ss Z" ]
+    - date:
+        match:
+          - key: "timestamp"
+            patterns: [ "dd/MMM/yyyy:HH:mm:ss Z" ]
   sink:
     - opensearch:
         hosts: [ "https://opensearch:9200" ]
