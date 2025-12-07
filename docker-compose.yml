@@ -48,7 +48,8 @@ services:
       - "SERVER_NAME=opensearch-dashboards"
       - "SERVER_HOST=0.0.0.0"
     depends_on:
-      - opensearch
+      opensearch:
+        condition: service_healthy
     networks:
       - opensearch-net
     # healthcheck:
@@ -66,7 +67,8 @@ services:
     ports:
       - 2021:2021
     depends_on:
-      - opensearch
+      opensearch:
+        condition: service_healthy
     networks:
       - opensearch-net
     healthcheck:
@@ -83,7 +85,8 @@ services:
       - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
       - ./data-ingestion/nginx/access.log:/var/log/access.log
     depends_on:
-      - data-prepper
+      data-prepper:
+        condition: service_healthy
     networks:
       - opensearch-net
 
