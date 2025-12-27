@@ -6,10 +6,10 @@ services:
       - cluster.name=opensearch-cluster
       - node.name=opensearch
       - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - "OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g"
-      - "DISABLE_INSTALL_DEMO_CONFIG=false"
-      - "DISABLE_SECURITY_PLUGIN=false"
+      - bootstrap.memory_lock=true # Disable JVM heap memory swapping
+      - "OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g" # Set min and max JVM heap sizes to at least 50% of system RAM
+      - "DISABLE_INSTALL_DEMO_CONFIG=false" # Prevents execution of bundled demo script which installs demo certificates and security configurations to OpenSearch
+      - "DISABLE_SECURITY_PLUGIN=false" # Enabled https for OpenSearch
       - "OPENSEARCH_INITIAL_ADMIN_PASSWORD=MyStrongPassword123!"
       - network.host=0.0.0.0
       - http.port=9200
