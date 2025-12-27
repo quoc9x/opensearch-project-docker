@@ -7,7 +7,7 @@ services:
       - node.name=opensearch
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g"
       - "DISABLE_INSTALL_DEMO_CONFIG=false"
       - "DISABLE_SECURITY_PLUGIN=false"
       - "OPENSEARCH_INITIAL_ADMIN_PASSWORD=MyStrongPassword123!"
@@ -30,10 +30,10 @@ services:
       - opensearch-net
     healthcheck:
       test: ["CMD-SHELL", "curl -k -u admin:MyStrongPassword123! https://localhost:9200/_cluster/health || exit 1"]
-      interval: 30s
-      timeout: 10s
+      interval: 10s
+      timeout: 5s
       retries: 5
-      start_period: 60s
+      start_period: 90s
 
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:3
@@ -63,7 +63,7 @@ services:
     container_name: data-prepper
     image: opensearchproject/data-prepper:2.8.0
     volumes:
-      - ./log_pipeline.yaml:/usr/share/data-prepper/pipelines/log_pipeline.yaml
+      - ./data-prepper/log_pipeline.yaml:/usr/share/data-prepper/pipelines/log_pipeline.yaml
     ports:
       - 2021:2021
     depends_on:
@@ -73,8 +73,8 @@ services:
       - opensearch-net
     healthcheck:
       test: ["CMD-SHELL", "curl -s http://localhost:2021/log/ingest -X POST -d '[]' || exit 1"]
-      interval: 30s
-      timeout: 10s
+      interval: 10s
+      timeout: 5s
       retries: 5
       start_period: 30s
 
@@ -82,8 +82,10 @@ services:
     container_name: fluent-bit
     image: fluent/fluent-bit:3.0
     volumes:
-      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
-      - ./data-ingestion/nginx/access.log:/var/log/access.log
+      - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./fluent-bit/multiline-parsers.conf:/fluent-bit/etc/multiline-parsers.conf
+      - ./data-ingestion/nginx-access.log:/var/log/nginx-access.log
+      - ./data-ingestion/java-springboot.log:/var/log/java-springboot.log
     depends_on:
       data-prepper:
         condition: service_healthy

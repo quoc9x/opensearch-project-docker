@@ -17,4 +17,6 @@ log-pipeline:
         username: admin
         password: MyStrongPassword123!
         index: "nginx_logs"
-        
+        worker_count: 2
+        batch_size: 200
+        flush_interval: 1s

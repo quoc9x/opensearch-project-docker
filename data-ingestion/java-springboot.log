@@ -1,0 +1,17 @@
+2025-12-20 14:32:18.457  INFO  12876 --- [           main] c.e.demo.DemoApplication      : Starting DemoApplication using Java 17.0.9 on DESKTOP-DEV with PID 12876
+2025-12-20 14:32:18.463  DEBUG 12876 --- [           main] o.s.b.c.e.AnnotationConfigServletWebServerApplicationContext : Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@5a2c4c9
+2025-12-20 14:32:19.012  INFO  12876 --- [           main] o.s.b.w.e.tomcat.TomcatWebServer : Tomcat initialized with port(s): 8080 (http)
+2025-12-20 14:32:19.034  INFO  12876 --- [           main] o.a.c.c.StandardService        : Starting service [Tomcat]
+2025-12-20 14:32:19.035  INFO  12876 --- [           main] o.a.c.c.StandardEngine         : Starting Servlet engine: [Apache Tomcat/10.1.15]
+2025-12-20 14:32:19.198  INFO  12876 --- [           main] o.s.b.w.e.tomcat.TomcatWebServer : Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-20 14:32:19.205  INFO  12876 --- [           main] c.e.demo.DemoApplication      : Started DemoApplication in 1.024 seconds (process running for 1.349)
+2025-12-20 14:33:01.742  INFO  12876 --- [nio-8080-exec-1] c.e.demo.controller.UserController : Received request GET /api/users
+2025-12-20 14:33:01.758  DEBUG 12876 --- [nio-8080-exec-1] c.e.demo.service.UserService    : Fetching users from database
+2025-12-20 14:33:01.802  INFO  12876 --- [nio-8080-exec-1] c.e.demo.repository.UserRepository : Executing SQL: SELECT id, name, email FROM users
+2025-12-20 14:33:01.845  INFO  12876 --- [nio-8080-exec-1] c.e.demo.controller.UserController : Successfully returned 25 users
+2025-12-20 14:34:12.116  WARN  12876 --- [nio-8080-exec-3] c.e.demo.service.UserService    : User with id=999 not found
+2025-12-20 14:35:27.443 ERROR 12876 --- [nio-8080-exec-5] c.e.demo.controller.ExceptionHandler : Unexpected error occurred
+java.lang.NullPointerException: Cannot invoke "String.length()" because "username" is null
+	at c.e.demo.service.UserService.createUser(UserService.java:42)
+	at c.e.demo.controller.UserController.createUser(UserController.java:58)
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
