@@ -2,6 +2,7 @@ log-pipeline:
   source:
     http:
       ssl: false
+      port: 2021
   processor:
     - grok:
         match:
@@ -17,6 +18,30 @@ log-pipeline:
         username: admin
         password: MyStrongPassword123!
         index: "nginx_logs"
+        worker_count: 2
+        batch_size: 200
+        flush_interval: 1s
+
+springboot-pipeline:
+  source:
+    http:
+      ssl: false
+      port: 2022
+  processor:
+    - grok:
+        match:
+          log: [ "%{TIMESTAMP_ISO8601:timestamp} +%{WORD:level} +%{NUMBER:pid} --- \\[%{DATA:thread}\\] %{DATA:class} +: %{GREEDYDATA:message}" ]
+    - date:
+        match:
+          - key: "timestamp"
+            patterns: [ "yyyy-MM-dd HH:mm:ss.SSS" ]
+  sink:
+    - opensearch:
+        hosts: [ "https://opensearch:9200" ]
+        insecure: true
+        username: admin
+        password: MyStrongPassword123!
+        index: "springboot_logs"
         worker_count: 2
         batch_size: 200
         flush_interval: 1s

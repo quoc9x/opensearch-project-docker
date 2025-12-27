@@ -65,7 +65,8 @@ services:
     volumes:
       - ./data-prepper/log_pipeline.yaml:/usr/share/data-prepper/pipelines/log_pipeline.yaml
     ports:
-      - 2021:2021
+      - 2021:2021  # Nginx logs pipeline
+      - 2022:2022  # Spring Boot logs pipeline
     depends_on:
       opensearch:
         condition: service_healthy
@@ -83,7 +84,7 @@ services:
     image: fluent/fluent-bit:3.0
     volumes:
       - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
-      - ./fluent-bit/multiline-parsers.conf:/fluent-bit/etc/multiline-parsers.conf
+      - ./fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf
       - ./data-ingestion/nginx-access.log:/var/log/nginx-access.log
       - ./data-ingestion/java-springboot.log:/var/log/java-springboot.log
     depends_on:
